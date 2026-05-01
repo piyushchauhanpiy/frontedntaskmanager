@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { projectAPI, userAPI } from '../../services/api';
 import LoadingSpinner from '../common/LoadingSpinner';
 import appConfig from '../../config/appConfig';
@@ -61,7 +61,7 @@ const Projects = () => {
     return 'Unknown';
   };
 
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     try {
       const response = await projectAPI.getMyProjects();
       const projectsData = response.data || [];
@@ -75,7 +75,7 @@ const Projects = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchProjects();

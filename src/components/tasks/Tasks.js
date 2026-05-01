@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { taskAPI, projectAPI, userAPI } from '../../services/api';
 import LoadingSpinner from '../common/LoadingSpinner';
 import appConfig from '../../config/appConfig';
@@ -33,7 +33,7 @@ const Tasks = () => {
     projectId: ''
   });
 
-  const loadAllData = async () => {
+  const loadAllData = useCallback(async () => {
     try {
       setLoading(true);
       await Promise.all([
@@ -47,9 +47,9 @@ const Tasks = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const loadTasks = async () => {
+  const loadTasks = useCallback(async () => {
     try {
       const [assignedResponse, createdResponse] = await Promise.all([
         taskAPI.getMyTasks(),
@@ -69,7 +69,7 @@ const Tasks = () => {
       setAssignedTasks([]);
       setCreatedTasks([]);
     }
-  };
+  }, []);
 
   const loadUserDataForTasks = async (tasks) => {
     const userIds = new Set();
@@ -125,7 +125,7 @@ const Tasks = () => {
     }
   };
 
-  const loadTasksForProject = async (projectId) => {
+  const loadTasksForProject = useCallback(async (projectId) => {
     try {
       const response = await taskAPI.getTasksByProject(projectId);
       const tasks = response.data || [];
@@ -146,7 +146,7 @@ const Tasks = () => {
         setCreatedTasks([]);
       }
     }
-  };
+  }, [activeView]);
 
   // Load initial data
   useEffect(() => {
