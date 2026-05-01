@@ -53,6 +53,7 @@ export const projectAPI = {
   getAdminProjects: () => api.get('/project/admin-projects'),
   createProject: (projectData) => api.post('/project/create', projectData),
   addMember: (memberData) => api.post('/project/add-member', memberData),
+  removeMember: (memberData) => api.post('/project/remove-member', memberData),
 };
 
 export const taskAPI = {

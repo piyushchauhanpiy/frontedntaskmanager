@@ -192,12 +192,28 @@ const Tasks = () => {
       console.error('Error creating task:', error);
       const errorMessage = error.response?.data?.message || 'Failed to create task';
       
-      // Show specific error for non-member case
+      // Show specific error messages for different cases
       if (errorMessage.includes('is not a member of this project')) {
         setError(`User with email "${taskForm.assignedToEmail}" is not a member of this project. Please add them as a member first.`);
+      } else if (errorMessage.includes('User not found') || errorMessage.includes('not found')) {
+        setError(`User with email "${taskForm.assignedToEmail}" not found. Please check the email address.`);
+      } else if (errorMessage.includes('Project not found')) {
+        setError('Selected project not found. Please select a valid project.');
+      } else if (errorMessage.includes('Only admin can assign tasks')) {
+        setError('Only project admins can assign tasks to members.');
+      } else if (errorMessage.includes('validation') || errorMessage.includes('required')) {
+        setError('Please fill in all required fields correctly.');
       } else {
         setError(errorMessage);
       }
+      
+      // Ensure error is visible by scrolling to top if needed
+      setTimeout(() => {
+        const errorElement = document.querySelector('.bg-red-50');
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
     } finally {
       setSubmitting(false);
     }
@@ -547,9 +563,10 @@ const Tasks = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
+                  Description *
                 </label>
                 <textarea
+                  required
                   value={taskForm.description}
                   onChange={(e) => setTaskForm({...taskForm, description: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -584,13 +601,15 @@ const Tasks = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Priority
+                  Priority *
                 </label>
                 <select
+                  required
                   value={taskForm.priority}
                   onChange={(e) => setTaskForm({...taskForm, priority: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
+                  <option value="">Select priority</option>
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
                   <option value="High">High</option>
@@ -599,10 +618,11 @@ const Tasks = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Due Date
+                  Due Date *
                 </label>
                 <input
                   type="date"
+                  required
                   value={taskForm.dueDate}
                   onChange={(e) => setTaskForm({...taskForm, dueDate: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"

@@ -161,6 +161,26 @@ const Projects = () => {
     }
   };
 
+  const handleRemoveMember = async (memberId, projectId) => {
+    setError('');
+    setSuccess('');
+    setCreating(true);
+    
+    try {
+      await projectAPI.removeMember({ projectId, memberId });
+      setSuccess('Member removed successfully!');
+      fetchProjects();
+      
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (error) {
+      console.error('Failed to remove member:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to remove member';
+      setError(errorMessage);
+    } finally {
+      setCreating(false);
+    }
+  };
+
   // Get user display name (email)
   const getUserDisplayName = (userId) => {
     const user = users[userId];
@@ -530,9 +550,27 @@ const Projects = () => {
                           <div className="text-xs text-gray-500">{getUserDisplayName(memberId)}</div>
                         </div>
                       </div>
-                      <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800">
-                        Member
-                      </span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800">
+                          Member
+                        </span>
+                        {getUserRole(selectedProject) === 'Admin' && memberId !== currentUser?.id && (
+                          <button
+                            onClick={() => {
+                              if (window.confirm(`Are you sure you want to remove ${getUserName(memberId)} from the project?`)) {
+                                handleRemoveMember(memberId, selectedProject.id);
+                              }
+                            }}
+                            disabled={creating}
+                            className="inline-flex items-center px-2 py-1 border border-red-300 text-xs font-medium rounded text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors disabled:opacity-50"
+                          >
+                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            Remove
+                          </button>
+                        )}
+                      </div>
                     </div>
                   )) || (
                     <div className="text-gray-500 text-center py-4">
