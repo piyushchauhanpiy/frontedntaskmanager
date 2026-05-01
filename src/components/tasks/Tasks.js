@@ -33,20 +33,6 @@ const Tasks = () => {
     projectId: ''
   });
 
-  // Load initial data
-  useEffect(() => {
-    loadAllData();
-  }, [loadAllData]);
-
-  // Load tasks when project filter changes
-  useEffect(() => {
-    if (selectedProject === 'all') {
-      loadTasks();
-    } else {
-      loadTasksForProject(selectedProject);
-    }
-  }, [selectedProject, loadTasks, loadTasksForProject]);
-
   const loadAllData = async () => {
     try {
       setLoading(true);
@@ -161,6 +147,20 @@ const Tasks = () => {
       }
     }
   };
+
+  // Load initial data
+  useEffect(() => {
+    loadAllData();
+  }, [loadAllData]);
+
+  // Load tasks when project filter changes
+  useEffect(() => {
+    if (selectedProject === 'all') {
+      loadTasks();
+    } else {
+      loadTasksForProject(selectedProject);
+    }
+  }, [selectedProject, loadTasks, loadTasksForProject]);
 
   const handleCreateTask = async (e) => {
     e.preventDefault();

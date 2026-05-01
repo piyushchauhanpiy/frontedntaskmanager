@@ -37,11 +37,6 @@ const Projects = () => {
     email: ''
   });
 
-  useEffect(() => {
-    fetchProjects();
-    loadCurrentUser();
-  }, [fetchProjects]);
-
   const loadCurrentUser = async () => {
     try {
       const response = await userAPI.getCurrentUser();
@@ -81,6 +76,11 @@ const Projects = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchProjects();
+    loadCurrentUser();
+  }, [fetchProjects]);
 
   const loadUserDataForProjects = async (projects) => {
     const userIds = new Set();
