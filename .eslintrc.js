@@ -1,0 +1,11 @@
+module.exports = {
+  extends: [
+    'react-app',
+    'react-app/jest'
+  ],
+  rules: {
+    'react-hooks/exhaustive-deps': 'off',
+    'no-unused-vars': 'off',
+    'no-use-before-define': 'off'
+  }
+};
