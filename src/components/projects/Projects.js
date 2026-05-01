@@ -40,7 +40,7 @@ const Projects = () => {
   useEffect(() => {
     fetchProjects();
     loadCurrentUser();
-  }, []);
+  }, [fetchProjects]);
 
   const loadCurrentUser = async () => {
     try {

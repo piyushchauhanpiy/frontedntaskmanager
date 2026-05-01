@@ -36,7 +36,7 @@ const Tasks = () => {
   // Load initial data
   useEffect(() => {
     loadAllData();
-  }, []);
+  }, [loadAllData]);
 
   // Load tasks when project filter changes
   useEffect(() => {
@@ -45,7 +45,7 @@ const Tasks = () => {
     } else {
       loadTasksForProject(selectedProject);
     }
-  }, [selectedProject]);
+  }, [selectedProject, loadTasks, loadTasksForProject]);
 
   const loadAllData = async () => {
     try {
